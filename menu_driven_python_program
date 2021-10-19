@@ -1,0 +1,219 @@
+def menu():
+    while True:
+        print("1 to create database")
+        print("2 to create table")
+        print("3 to show database")
+        print("4 to show tables")
+        print(" 5 to show structure of the table")
+        print("6 to add record")
+        print("7 to update record")
+        print("8 to delete record")
+        print("9 to display record")
+        print("10 to sort the data in descending order of total")
+        print("11 to display where totol between 300 - 400 one by one")
+        print("12 to display a particular record")
+        print("13 to exit")
+        choice = int(input("Enter your choice"))
+        if choice == 1: createdatabase()
+        elif choice == 2: createtable()
+        elif choice == 3: showdatabases()
+        elif choice == 4: showtables()
+        elif choice == 5: showstru()
+        elif choice == 6: adddata()
+        elif choice == 7: updatedata()
+        elif choice == 8: deletedata()
+        elif choice == 9: displaydata()
+        elif choice == 10: disp_desc_total()
+        elif choice == 11: displaydata_one_by_one()
+        elif choice == 12: search_record()
+        elif choice == 13: print("Exiting");break
+        else: print("Wrong input")
+        
+def createdatabase():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy")
+        MyCursor = db.cursor()
+        sql = "create database s1 "
+        MyCursor.execute(sql)
+        print("Database created")
+    except:
+        print("The database exists")
+    MyCursor.execute("use s1")
+    
+    db.close()
+    
+def createtable():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy")
+        MyCursor = db.cursor()
+        sql = "create table student \
+              (rn int primary key, \
+               name varchar(20), \
+               total int, \
+               percentage float(6,2), \
+               grade char)"
+        cursor.execute(sql)
+        print("Table created")
+    except:
+        print("The table exists")
+    MyCursor.close()
+    db.close()
+
+def showdatabases():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy")
+        MyCursor = db.cursor()
+        sql = "show databases"
+        MyCursor.execute(sql)
+        for x in MyCursor:
+            print(x)    
+    except:
+        print("Error in connection")
+    MyCursor.close()
+    db.close()
+    
+def showtables():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        MyCursor.execute("show tables")
+        for x in MyCursor:
+            print(x)    
+    except:
+        print("Error in connection")
+    MyCursor.close()
+    db.close()    
+
+def showstru():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        sql = "desc student"
+        MyCursor.execute(sql)
+        for x in MyCursor:
+            print(x)    
+    except:
+        print("Error in connection")
+    MyCursor.close()
+    db.close() 
+
+def adddata():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        r = int(input("Enter roll number"))
+        n = input("Enter name")
+        t = int(input("Enter total"))
+        p = t/500 * 100
+        g = input("Enter grade")
+        sql = "insert into student values(%s,%s,%s,%s,%s)"
+        val = (r,n,t,p,g)
+        MyCursor.execute(sql,val)
+        db.commit()
+        print("Record added")
+    except:
+        db.rollback()
+        print("Record not added")
+    MyCursor.close()
+    db.close()
+def updatedata():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        nm = int(input("Enter rollno"))
+        tot = int(input("Enter total"))
+        gr = input("Enter grade")
+        perc = tot/500 * 100
+        sql = "Update student set total = %s, percentage = %s, grade = %s where rollno = %s"
+        val = (tot,perc, gr,nm)
+        MyCursor.execute(sql,val)
+        db.commit()
+        print(MyCursor.rowcount, "record updated")
+    except:
+        db.rollback()
+        print("Record not updated")
+    MyCursor.close()
+    db.close()    
+def deletedata():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        r = int(input("Enter rollno"))
+        sql = "Delete from student where rollno = %s"
+        MyCursor.execute(sql,(r,))
+        db.commit()
+        print(MyCursor.rowcount, "record deleted")
+    except:
+        db.rollback()
+        print("Record not deleted")
+    MyCursor.close()
+    db.close() 
+def displaydata():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root",  password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        MyCursor.execute("SELECT * FROM student")
+        results = MyCursor.fetchall()
+        for x in results:
+            print(x[0],x[1],x[2],x[3],x[4]) # print(x)
+    except:
+        print("Error, unable to fetch data")
+    MyCursor.close()
+    db.close()
+def disp_desc_total():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root", password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        MyCursor.execute("select * from student order by total desc")
+        results = MyCursor.fetchall()
+        for x in results:
+            print(x[0],x[1],x[2],x[3],x[4])
+        
+    except:
+        print("Error, unable to sort")
+    MyCursor.close()
+    db.close()
+def displaydata_one_by_one():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root",  password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        MyCursor.execute("SELECT * FROM student where total >= 300 and total <= 400")
+        while True:
+            row = MyCursor.fetchone()
+            if row == None:
+                break
+            print(row)
+        """ results = MyCursor.fetchall()
+            for x in results:
+                print(x[0],x[1],x[2],x[3],x[4])"""
+    except:
+        print("Error, unable to fetch data")
+    MyCursor.close()
+    db.close()
+def search_record():
+    import mysql.connector
+    try:
+        db = mysql.connector.connect(host = "localhost", user = "root",  password = "samy", database = "s1")
+        MyCursor = db.cursor()
+        rn = int(input("Enter roll number"))
+        sql = "SELECT * FROM student where rollno = %s"
+        MyCursor.execute(sql,(rn,))
+        row = MyCursor.fetchone()
+        print(row)
+    except:
+        print("Error, unable to fetch data")
+    MyCursor.close()
+    db.close()
+
+menu()  
